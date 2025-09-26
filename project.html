@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphixx.co - Online Electronics Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cart-item:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        
+        #checkout-form input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        
+        .admin-panel {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+                <span class="text-xl font-bold text-gray-800">Graphixx.co ElectroTech HUB</span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-blue-600 font-medium">Home</a>
+                <div class="dropdown relative">
+                    <button class="text-gray-700 hover:text-blue-600 font-medium">Categories</button>
+                    <div class="dropdown-menu absolute hidden bg-white shadow-lg rounded-md mt-2 py-1 w-48">
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Smartphones</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Laptops</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">TVs</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Audio</a>
+                    </div>
+                </div>
+                <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">Deals</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">About</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+            </nav>
+            
+            <!-- Cart and Admin -->
+            <div class="flex items-center space-x-4">
+                <button id="cart-button" class="relative p-1 text-gray-700 hover:text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button id="admin-access-btn" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-1 rounded-full text-sm font-medium hidden">Admin</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-bold">Your Cart</h3>
+            <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                ✕
+            </button>
+        </div>
+        <div id="cart-items" class="p-4 space-y-4">
+            <!-- Cart items will appear here -->
+        </div>
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex justify-between mb-2">
+                <span class="font-medium">Subtotal:</span>
+                <span id="cart-subtotal">$0.00</span>
+            </div>
+            <button id="checkout-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 rounded-xl mb-12">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Premium Electronics Store</h1>
+                <p class="text-xl mb-6">Shop the latest tech gadgets with free shipping</p>
+                <button class="bg-white text-blue-600 hover:bg-gray-100 px-6 py-2 rounded-full font-medium">
+                    Shop Now
+                </button>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section>
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">Featured Products</h2>
+                <div class="relative">
+                    <select id="category-filter" class="border border-gray-300 rounded-full py-1 px-4 appearance-none bg-white pr-8">
+                        <option value="all">All Categories</option>
+                        <option value="phones">Smartphones</option>
+                        <option value="laptops">Laptops</option>
+                        <option value="tvs">TVs</option>
+                        <option value="audio">Audio</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Products will be loaded here -->
+                <div class="text-center py-8">
+                    <p>Loading products...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Graphixx.co ElectroTech HUB</h3>
+                    <p class="text-gray-400">Your one-stop shop for all electronics needs.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Shipping</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Subscribe for updates and deals</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="bg-gray-700 text-white px-4 py-2 rounded-l-lg focus:outline-none w-full">
+                        <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-lg">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p>&copy; 2025 Graphixx.co ElectroTech HUB. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h3 class="text-xl font-bold mb-4">Admin Login</h3>
+            <form id="admin-login-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Username:</label>
+                    <input type="text" name="username" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Password:</label>
+                    <input type="password" name="password" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="fixed left-0 top-0 h-full w-64 bg-gray-900 text-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="p-4 border-b border-gray-700">
+            <h3 class="text-xl font-bold">Admin Panel</h3>
+            <button id="close-admin" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                ✕
+            </button>
+        </div>
+        <div class="p-4">
+            <button id="logout-admin" class="w-full bg-red-600 text-white py-2 rounded-lg mb-4 hover:bg-red-700">
+                Logout
+            </button>
+            <div class="space-y-2">
+                <button id="add-product-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                    + Add Product
+                </button>
+                <button id="view-products-btn" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
+                    Manage Products
+                </button>
+            </div>
+            
+            <!-- Product Management Area -->
+            <div id="admin-products-area" class="mt-6 hidden">
+                <h4 class="text-lg font-medium mb-2">Current Products</h4>
+                <div id="admin-products-list" class="space-y-2">
+                    <!-- Products will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="add-product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h3 class="text-xl font-bold mb-4">Add New Product</h3>
+            <form id="add-product-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Product Name:</label>
+                    <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Price ($):</label>
+                    <input type="number" step="0.01" name="price" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Category:</label>
+                    <select name="category" class="w-full px-3 py-2 border rounded-lg" required>
+                        <option value="phones">Smartphones</option>
+                        <option value="laptops">Laptops</option>
+                        <option value="tvs">TVs</option>
+                        <option value="audio">Audio</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Image URL:</label>
+                    <input type="text" name="image" placeholder="Leave empty for default" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div class="flex space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex-1">
+                        Save
+                    </button>
+                    <button type="button" id="cancel-add-product" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex-1">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="edit-product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h3 class="text-xl font-bold mb-4">Edit Product</h3>
+            <form id="edit-product-form">
+                <input type="hidden" name="id">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Product Name:</label>
+                    <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Price ($):</label>
+                    <input type="number" step="0.01" name="price" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Category:</label>
+                    <select name="category" class="w-full px-3 py-2 border rounded-lg" required>
+                        <option value="phones">Smartphones</option>
+                        <option value="laptops">Laptops</option>
+                        <option value="tvs">TVs</option>
+                        <option value="audio">Audio</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Image URL:</label>
+                    <input type="text" name="image" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div class="flex space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex-1">
+                        Update
+                    </button>
+                    <button type="button" id="cancel-edit-product" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex-1">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h3 class="text-xl font-bold mb-4">Checkout</h3>
+            <form id="checkout-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Full Name:</label>
+                    <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Email:</label>
+                    <input type="email" name="email" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Address:</label>
+                    <input type="text" name="address" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Payment Method:</label>
+                    <select name="payment" class="w-full px-3 py-2 border rounded-lg" required>
+                        <option value="mpesa">M-Pesa Mobile Money</option>
+                        <option value="credit">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank">Bank Transfer</option>
+                        <option value="cash_on_delivery">Cash on Delivery</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-medium">Total:</span>
+                        <span id="checkout-total">$0.00</span>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex-1">
+                        Place Order
+                    </button>
+                    <button type="button" id="cancel-checkout" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex-1">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- M-Pesa Payment Instructions Modal -->
+    <div id="mpesa-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h3 class="text-xl font-bold mb-4">M-Pesa Payment</h3>
+            <p class="mb-4">To complete your payment:</p>
+            <ol class="list-decimal pl-5 mb-4 space-y-2">
+                <li>Go to M-Pesa on your phone</li>
+                <li>Select Pay Bill</li>
+                <li>Enter Business No: <span class="font-bold">123456</span></li>
+                <li>Enter Account No: <span id="mpesa-account" class="font-bold"></span></li>
+                <li>Enter Amount: <span id="mpesa-amount" class="font-bold"></span></li>
+                <li>Enter your M-Pesa PIN</li>
+                <li>Confirm payment</li>
+            </ol>
+            <button id="close-mpesa" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full">
+                I've Completed Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- Order Confirmation -->
+    <div id="order-confirmation" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Order Confirmed!</h3>
+            <p class="text-gray-600 mb-6">Thank you for your purchase. Your order has been placed successfully.</p>
+            <button id="close-confirmation" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ==============================
+        // APP INITIALIZATION
+        // ==============================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the app
+            initApp();
+        });
+
+        // ==============================
+        // CORE FUNCTIONALITY
+        // ==============================
+        function initApp() {
+            // Initialize default products if none exist
+            initializeProducts();
+            
+            // Load products into the store
+            loadProducts();
+            
+            // Load admin products if admin is logged in
+            if (isAdminLoggedIn()) {
+                document.getElementById('admin-access-btn').classList.remove('hidden');
+                loadAdminProducts();
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Load cart from localStorage
+            updateCartCount();
+        }
+
+        // Initialize default products
+        function initializeProducts() {
+            if (!localStorage.getItem('products')) {
+                const defaultProducts = [
+                    {
+                        id: 1,
+                        name: "UltraMax Pro Phone",
+                        price: 899,
+                        category: "phones",
+                        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/eccd1b01-baf0-4443-9c64-c8467fb0a99f.png"
+                    },
+                    {
+                        id: 2,
+                        name: "ProBook Elite Laptop",
+                        price: 1299,
+                        category: "laptops",
+                        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8e7c953c-9bf6-4a54-9e7d-17c86900a434.png"
+                    },
+                    {
+                        id: 3,
+                        name: "Quantum 4K TV",
+                        price: 1599,
+                        category: "tvs",
+                        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b298b018-22c3-424a-aa58-053ab6c8347e.png"
+                    },
+                    {
+                        id: 4,
+                        name: "SoundBlast Wireless Earbuds",
+                        price: 199,
+                        category: "audio",
+                        image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d029df51-201a-4e63-809b-7212cb5a760f.png"
+                    }
+                ];
+                localStorage.setItem('products', JSON.stringify(defaultProducts));
+            }
+        }
+
+        // ==============================
+        // PRODUCT MANAGEMENT
+        // ==============================
+        function loadProducts(filterCategory = 'all') {
+            const productsContainer = document.getElementById('products-container');
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            // Filter products if a category is selected
+            if (filterCategory !== 'all') {
+                products = products.filter(product => product.category === filterCategory);
+            }
+            
+            // Clear existing content
+            productsContainer.innerHTML = '';
+            
+            // Check if there are products
+            if (products.length === 0) {
+                productsContainer.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-600">No products found in this category.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render each product
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300';
+                productCard.innerHTML = `
+                    <div class="relative">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                        ${product.category === 'phones' ? '<div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</div>' : ''}
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-semibold mb-1">${product.name}</h3>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-lg font-bold text-gray-800">$${product.price.toFixed(2)}</span>
+                            </div>
+                            <button class="add-to-cart bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
+                                    data-id="${product.id}" 
+                                    data-name="${product.name}" 
+                                    data-price="${product.price}">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+            
+            // Add event listeners to the new "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    const productName = this.dataset.name;
+                    const productPrice = parseFloat(this.dataset.price);
+                    addToCart(productId, productName, productPrice);
+                });
+            });
+        }
+
+        // ==============================
+        // CART FUNCTIONALITY
+        // ==============================
+        function addToCart(productId, productName, productPrice) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+            
+            // Show a quick notification
+            showNotification(`${productName} added to cart`);
+        }
+
+        function removeFromCart(productId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Remove item from cart
+            cart = cart.filter(item => item.id !== productId);
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function updateCartQuantity(productId, newQuantity) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            // Update quantity
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = totalItems;
+        }
+
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartSubtotalElement = document.getElementById('cart-subtotal');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Clear existing cart items
+            cartItemsContainer.innerHTML = '';
+            
+            // Render each cart item
+            cart.forEach(item => {
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg cart-item';
+                cartItemElement.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <button class="remove-from-cart text-red-500 hover:text-red-700" data-id="${item.id}">
+                            ✕
+                        </button>
+                        <div>
+                            <h4 class="font-medium">${item.name}</h4>
+                            <span class="text-sm text-gray-500">$${item.price.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="decrease-quantity text-gray-600 px-2 py-1 rounded hover:bg-gray-200" data-id="${item.id}">-</button>
+                        <span class="quantity-display w-8 text-center">${item.quantity}</span>
+                        <button class="increase-quantity text-gray-600 px-2 py-1 rounded hover:bg-gray-200" data-id="${item.id}">+</button>
+                    </div>
+                `;
+                
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            // Calculate subtotal
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            
+            // Update checkout total
+            document.getElementById('checkout-total').textContent = `$${subtotal.toFixed(2)}`;
+            
+            // Add event listeners to cart buttons
+            document.querySelectorAll('.remove-from-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    removeFromCart(productId);
+                });
+            });
+            
+            document.querySelectorAll('.increase-quantity').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const item = cart.find(item => item.id === productId);
+                    if (item) {
+                        updateCartQuantity(productId, item.quantity + 1);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.decrease-quantity').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const item = cart.find(item => item.id === productId);
+                    if (item && item.quantity > 1) {
+                        updateCartQuantity(productId, item.quantity - 1);
+                    } else if (item && item.quantity === 1) {
+                        removeFromCart(productId);
+                    }
+                });
+            });
+        }
+
+        // ==============================
+        // ADMIN FUNCTIONALITY
+        // ==============================
+        const ADMIN_CREDENTIALS = {
+            username: 'Optimous',      // Default admin username
+            password: 'Graph20.294.$'    // Default admin password
+        };
+
+        function isAdminLoggedIn() {
+            return localStorage.getItem('adminLoggedIn') === 'true';
+        }
+
+        function loginAdmin() {
+            localStorage.setItem('adminLoggedIn', 'true');
+            document.getElementById('admin-access-btn').classList.remove('hidden');
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        function logoutAdmin() {
+            localStorage.setItem('adminLoggedIn', 'false');
+            document.getElementById('admin-access-btn').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.add('-translate-x-full');
+            document.getElementById('admin-products-area').classList.add('hidden');
+        }
+
+        function loadAdminProducts() {
+            const adminProductsList = document.getElementById('admin-products-list');
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            
+            adminProductsList.innerHTML = '';
+            
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'flex justify-between items-center p-2 bg-gray-800 rounded';
+                productElement.innerHTML = `
+                    <div>
+                        <h4 class="font-medium">${product.name}</h4>
+                        <span class="text-sm text-gray-400">$${product.price.toFixed(2)}</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="edit-product bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded text-xs" 
+                                data-id="${product.id}">
+                            Edit
+                        </button>
+                        <button class="delete-product bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs" 
+                                data-id="${product.id}">
+                            Delete
+                        </button>
+                    </div>
+                `;
+                adminProductsList.appendChild(productElement);
+            });
+            
+            // Add event listeners to admin product buttons
+            document.querySelectorAll('.edit-product').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    editProduct(productId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-product').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.id);
+                    deleteProduct(productId);
+                });
+            });
+        }
+
+        function addProduct() {
+            const form = document.getElementById('add-product-form');
+            
+            const name = form.name.value;
+            const price = parseFloat(form.price.value);
+            const category = form.category.value;
+            
+            if (!name || isNaN(price) || !category) {
+                alert('Please fill in all fields correctly');
+                return;
+            }
+            
+            const image = form.image.value || `https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2c2c672a-016e-4932-90de-96aea53fd54f.png)}`;
+            
+            const newProduct = {
+                id: Date.now(),
+                name,
+                price,
+                category,
+                image
+            };
+            
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            products.push(newProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            // Close modal and reload products
+            document.getElementById('add-product-modal').classList.add('hidden');
+            form.reset();
+            
+            // Update products lists
+            loadProducts();
+            loadAdminProducts();
+            
+            showNotification('Product added successfully');
+        }
+
+        function editProduct(productId) {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) return;
+            
+            const form = document.getElementById('edit-product-form');
+            form.id.value = product.id;
+            form.name.value = product.name;
+            form.price.value = product.price;
+            form.category.value = product.category;
+            form.image.value = product.image;
+            
+            document.getElementById('edit-product-modal').classList.remove('hidden');
+        }
+
+        function updateProduct() {
+            const form = document.getElementById('edit-product-form');
+            const productId = parseInt(form.id.value);
+            
+            const name = form.name.value;
+            const price = parseFloat(form.price.value);
+            const category = form.category.value;
+            const image = form.image.value || `https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a7542659-87df-421d-9f8f-6b4ea72ab8f1.png)}`;
+            
+            if (!name || isNaN(price) || !category) {
+                alert('Please fill in all fields correctly');
+                return;
+            }
+            
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            const productIndex = products.findIndex(p => p.id === productId);
+            
+            if (productIndex !== -1) {
+                products[productIndex] = {
+                    id: productId,
+                    name,
+                    price,
+                    category,
+                    image
+                };
+                
+                localStorage.setItem('products', JSON.stringify(products));
+                
+                // Close modal and reload products
+                document.getElementById('edit-product-modal').classList.add('hidden');
+                form.reset();
+                
+                // Update products lists
+                loadProducts();
+                loadAdminProducts();
+                
+                showNotification('Product updated successfully');
+            }
+        }
+
+        function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            products = products.filter(p => p.id !== productId);
+            
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            // Update products lists
+            loadProducts();
+            loadAdminProducts();
+            
+            showNotification('Product deleted successfully');
+        }
+
+        // ==============================
+        // EVENT LISTENERS
+        // ==============================
+        function setupEventListeners() {
+            // Cart functionality
+            document.getElementById('cart-button').addEventListener('click', function() {
+                renderCartItems();
+                document.getElementById('cart-sidebar').classList.remove('translate-x-full');
+            });
+            
+            document.getElementById('close-cart').addEventListener('click', function() {
+                document.getElementById('cart-sidebar').classList.add('translate-x-full');
+            });
+            
+            // Checkout functionality
+            document.getElementById('checkout-btn').addEventListener('click', function() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                if (cart.length === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+                
+                document.getElementById('checkout-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('cancel-checkout').addEventListener('click', function() {
+                document.getElementById('checkout-modal').classList.add('hidden');
+            });
+            
+            document.getElementById('checkout-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const paymentMethod = this.payment.value;
+                if (paymentMethod === 'mpesa') {
+                    // Simulate M-Pesa payment flow
+                    const phone = prompt('Enter your M-Pesa phone number (format: 2547XXXXXXXX):');
+                    if (phone && phone.match(/^2547\d{8}$/)) {
+                        alert(`M-Pesa payment request sent to ${phone}. Please check your phone to complete payment.`);
+                    } else {
+                        alert('Invalid phone number format. Please use 2547XXXXXXXX');
+                        return;
+                    }
+                } else if (paymentMethod === 'cash_on_delivery') {
+                    alert('Your order will be processed for cash payment on delivery');
+                } else {
+                    alert(`Processing ${paymentMethod} payment...`);
+                }
+                
+                // Clear the cart
+                localStorage.removeItem('cart');
+                updateCartCount();
+                
+                // Hide checkout modal and show confirmation
+                document.getElementById('checkout-modal').classList.add('hidden');
+                document.getElementById('order-confirmation').classList.remove('hidden');
+            });
+            
+            document.getElementById('close-confirmation').addEventListener('click', function() {
+                document.getElementById('order-confirmation').classList.add('hidden');
+            });
+            
+            // Category filter
+            document.getElementById('category-filter').addEventListener('change', function() {
+                loadProducts(this.value);
+            });
+            
+            // Admin functionality
+            document.getElementById('admin-access-btn').addEventListener('click', function() {
+                if (!isAdminLoggedIn()) {
+                    document.getElementById('admin-login-modal').classList.remove('hidden');
+                } else {
+                    document.getElementById('admin-dashboard').classList.remove('-translate-x-full');
+                }
+            });
+            
+            // Store hashed credentials in localStorage if they don't exist
+            if (!localStorage.getItem('adminCredentials')) {
+                const hashedCredentials = {
+                    username: hashCode('Optimous'),
+                    password: hashCode('Graph20')
+                };
+                localStorage.setItem('adminCredentials', JSON.stringify(hashedCredentials));
+            }
+
+            document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = this.username.value;
+                const password = this.password.value;
+                const storedCreds = JSON.parse(localStorage.getItem('adminCredentials'));
+                
+                if (hashCode(username) === storedCreds.username && 
+                    hashCode(password) === storedCreds.password) {
+                    loginAdmin();
+                    document.getElementById('admin-dashboard').classList.remove('-translate-x-full');
+                    loadAdminProducts();
+                } else {
+                    alert('Invalid credentials');
+                }
+            });
+
+            // Simple string hashing function
+            function hashCode(string) {
+                let hash = 0;
+                for (let i = 0; i < string.length; i++) {
+                    const char = string.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash &= hash; // Convert to 32bit integer
+                }
+                return hash;
+            }
+            
+            document.getElementById('logout-admin').addEventListener('click', function() {
+                logoutAdmin();
+            });
+            
+            document.getElementById('close-admin').addEventListener('click', function() {
+                document.getElementById('admin-dashboard').classList.add('-translate-x-full');
+            });
+            
+            document.getElementById('add-product-btn').addEventListener('click', function() {
+                document.getElementById('add-product-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('cancel-add-product').addEventListener('click', function() {
+                document.getElementById('add-product-modal').classList.add('hidden');
+            });
+            
+            document.getElementById('add-product-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addProduct();
+            });
+            
+            document.getElementById('edit-product-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateProduct();
+            });
+            
+            document.getElementById('cancel-edit-product').addEventListener('click', function() {
+                document.getElementById('edit-product-modal').classList.add('hidden');
+            });
+            
+            document.getElementById('view-products-btn').addEventListener('click', function() {
+                const productsArea = document.getElementById('admin-products-area');
+                productsArea.classList.toggle('hidden');
+                
+                if (!productsArea.classList.contains('hidden')) {
+                    loadAdminProducts();
+                }
+            });
+            
+            // M-Pesa modal close button
+            document.getElementById('close-mpesa').addEventListener('click', function() {
+                document.getElementById('mpesa-modal').classList.add('hidden');
+                document.getElementById('order-confirmation').classList.remove('hidden');
+            });
+
+            // Keyboard shortcut for admin access (Ctrl+A for testing)
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'a') {
+                    document.getElementById('admin-login-modal').classList.remove('hidden');
+                }
+            });
+        }
+
+        // ==============================
+        // HELPER FUNCTIONS
+        // ==============================
+        // M-Pesa payment handling
+        function handleMpesaPayment(phone, amount) {
+            document.getElementById('mpesa-modal').classList.remove('hidden');
+            document.getElementById('mpesa-account').textContent = phone;
+            document.getElementById('mpesa-amount').textContent = 'KES ' + (amount * 100).toFixed(2);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

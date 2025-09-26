@@ -1,0 +1,161 @@
+// Initialize default products (now seeds via API if empty)
+async function initializeProducts() {
+  try {
+    const response = await fetch(`${API_BASE}/products`);
+    const products = await response.json();
+    if (products.length === 0) {
+      // Seed defaults via API (admin token needed; for now, assume pre-seeded)
+      console.log('Products empty—seed via Postman or admin panel');
+    }
+  } catch (err) {
+    console.error('Error loading products:', err);
+    // Fallback to localStorage if API fails (for dev)
+    if (!localStorage.getItem('products')) {
+      // Your existing defaultProducts code here as fallback
+    }
+  }
+}
+
+// Load products (with filter)
+async function loadProducts(filterCategory = 'all') {
+  try {
+    const url = `${API_BASE}/products${filterCategory !== 'all' ? `?category=${filterCategory}` : ''}`;
+    const response = await fetch(url);
+    const products = await response.json();
+    
+    const productsContainer = document.getElementById('products-container');
+    productsContainer.innerHTML = '';
+    
+    if (products.length === 0) {
+      productsContainer.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-gray-600">No products found.</p></div>`;
+      return;
+    }
+    
+    products.forEach(product => {
+      const productCard = document.createElement('div');
+      productCard.className = 'product-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300';
+      productCard.innerHTML = `
+        <div class="relative">
+          <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+          ${product.category === 'phones' ? '<div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</div>' : ''}
+        </div>
+        <div class="p-4">
+          <h3 class="text-lg font-semibold mb-1">${product.name}</h3>
+          <div class="flex items-center justify-between">
+            <span class="text-lg font-bold text-gray-800">$${product.price.toFixed(2)}</span>
+            <button class="add-to-cart bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-medium"
+                    data-id="${product._id}" data-name="${product.name}" data-price="${product.price}">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      `;
+      productsContainer.appendChild(productCard);
+    });
+    
+    // Event listeners (same as before, but use product._id)
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = this.dataset.id;
+        const productName = this.dataset.name;
+        const productPrice = parseFloat(this.dataset.price);
+        addToCart(productId, productName, productPrice);  // Cart still local for now
+      });
+    });
+  } catch (err) {
+    console.error('Error loading products:', err);
+    document.getElementById('products-container').innerHTML = '<div class="text-center py-8"><p>Error loading products. Check console.</p></div>';
+  }
+}
+
+// Add product (admin only)
+async function addProduct() {
+  const form = document.getElementById('add-product-form');
+  const body = {
+    name: form.name.value,
+    price: parseFloat(form.price.value),
+    category: form.category.value,
+    image: form.image.value || 'https://via.placeholder.com/300x200?text=No+Image'
+  };
+
+  if (!body.name || isNaN(body.price) || !body.category) {
+    alert('Please fill in all fields correctly');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) throw new Error('Failed to add product');
+    
+    document.getElementById('add-product-modal').classList.add('hidden');
+    form.reset();
+    loadProducts();
+    loadAdminProducts();
+    showNotification('Product added successfully');
+  } catch (err) {
+    alert('Error adding product: ' + err.message);
+  }
+}
+
+// Edit product (populate form with API data)
+async function editProduct(productId) {
+  try {
+    const response = await fetch(`${API_BASE}/products/${productId}`);
+    const product = await response.json();
+    
+    const form = document.getElementById('edit-product-form');
+    form.id.value = product._id;
+    form.name.value = product.name;
+    form.price.value = product.price;
+    form.category.value = product.category;
+    form.image.value = product.image;
+    
+    document.getElementById('edit-product-modal').classList.remove('hidden');
+  } catch (err) {
+    alert('Error loading product: ' + err.message);
+  }
+}
+
+// Update product
+async function updateProduct() {
+  const form = document.getElementById('edit-product-form');
+  const productId = form.id.value;
+  const body = {
+    name: form.name.value,
+    price: parseFloat(form.price.value),
+    category: form.category.value,
+    image: form.image.value || 'https://via.placeholder.com/300x200?text=No+Image'
+  };
+
+  if (!body.name || isNaN(body.price) || !body.category) {
+    alert('Please fill in all fields correctly');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/products/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) throw new Error('Failed to update product');
+    
+    document.getElementById('edit-product-modal').classList.add('hidden');
+    form.reset();
+    loadProducts();
+    loadAdminProducts();
+    showNotification('Product updated successfully');
+  } catch (err) {
+    alert('Error updating product: ' +
